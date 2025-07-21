@@ -1,0 +1,103 @@
+This app is built using a structured, iterative AI agent protocol. Work and intent is tracked through a small set of plaintext markdown files.
+
+ORGANIZATIONAL FILES
+
+1. Design.md (stable spec that sets up initial plan for app, should very rarely change): 3 subsections/headers:
+1.1 Problem: Concise summary of what the app is trying to solve (The Why)
+1.2 Requirements: Todo bullet list of expected features (The What)
+1.3 Design: The architecture and user experience (The How)
+2. Tasks.md: Live todo bullet list of major features, roadmap items, and long-term todos. User stories that slowly get worked and checked off. If a task idea isn't supported by the current design, log it as a Change or Discovery in Evolution.md. This list will be important for readers eventually to see how the app evolved.
+3. Issues.md: Live transient list of problems or bugs that need resolution but are not part of the long-term roadmap. Generally added to after trying to implement a task and failing validation of the work. This list is not really important for readers later because they don't care about intermediate states where the app was broken or didn't work as intended.
+4. Evolution.md: Log of key architectural choices with reasons. Useful for long-term memory and audit trail. Includes timestamps. Tracks major shifts to design or requirements. Entries are tagged as Change, Decision, or Discovery. What changed / Why it changed / What was done. Every Evolution.md entry that affects implementation should be immediately followed by a concrete task or issue, with a link or reference. Staging ground for design evolution; Design.md is updated after user validation and manual prompt.
+5. Changelog.md: Human-readable summary of what changed between versions or milestones. Timestamp, version number and concise summary sentence with additional details after.
+6. Readme.md (Should change fairly rarely): Main document for the end user that concisely describes product first and then has usage instructions. At the end there is a section on how the app was built that links all relevant markdown files.
+
+EXAMPLES:
+
+1. Design.md
+
+Problem
+
+Let users share short text notes via public link. [...]
+
+Requirements
+
+- Create and edit notes
+- Shareable public link
+- Notes persist between sessions
+
+Design
+
+Single-page app using localStorage, with optional sync to backend. [...]
+
+2. Tasks.md
+
+- [ ] Setup project and homepage
+  - Additional context 1
+  - Additional context 2
+- [ ] Build note editor component
+- [ ] Add public share link support (from Evolution 2025-01-15)
+
+3. Issues.md
+
+- [ ] Safari blocks clipboard copy API
+  - Additional context 1
+  - Additional context 2
+- [ ] Notes disappear after refresh 
+
+Evolution.md
+
+Change: Notes must persist across sessions. (2025-01-13)
+
+- Task added: Implement persistence.
+
+Decision: Use localStorage instead of session memory. (2025-01-13)
+
+- Reason: Refresh clears memory state, but localStorage persists.
+- Task added: Use localStorage
+
+Discovery: Safari blocks Clipboard API. (2025-01-13)
+
+- Logged as issue: Fix Safari Clipboard API
+
+5. Changelog.md
+
+0.2.1 - Password field hide typed characters (2025-01-13)
+
+0.2.0 - User signup form (2025-01-13)
+
+- Form with username and password
+- Dummy authentication endpoints
+
+0.1.0 - Initial scaffold (2025-01-13)
+
+- Created basic directory structure and first landing page
+
+USER WORKFLOW
+
+After creating the initial scaffold of the app, the end user will generally give any of these 3 high level commands:
+
+1. New Task: Add a new feature based on Design.md, tracked in Evolution.md
+2. Fix Issue: Address a problem that was generally introduced the previous task work. Add or edit it in Issues.md then make the actual code adjustments.
+3. Continue: Works off next item from Tasks.md
+
+After each command the AI completes the user will:
+
+Evaluate — Assess if the last step succeeded; yes: commit, then continue; no: explain what's wrong and fix existing issue or create new issue.
+
+AI WORKFLOW
+
+- Follow current Tasks.md or fix an Issues.md item.
+- All issues should generally be solved first before working on the next task.
+- If design needs to change, log it in Evolution.md as a Change.
+- If a new constraint or feature idea comes up, log it as Discovery or Decision.
+- Suggest updates to Tasks.md or Issues.md as needed.
+- Tasks.md is action-focused, but if a new task deviates from the spec, it should first be logged in Evolution.md (with change tag and reason).
+- Do not edit Design.md directly, propose edits in Evolution.md.
+
+OUTPUT INSTRUCTIONS:
+
+- Propose concise code scoped to the current step. Always focus on simplicity, conciseness and elegance. The end result should be easy to read for humans and AI using canonical approaches, being intuitive with beautiful code.
+- Include a suggested commit message if applicable.
+- Suggest updates to live documents as needed. Document updates should be elegant and concise. Use minimal, clean markdown and no emojis. Clearly section with header formatting being optional when reading in source mode.
+- Git commits: The first line should be a concise summary followed by a blank line.  When applicable add version numbers. Add additional details in a bulleted list. Capitalize the first word of the commit message. Just ascii plain text, no emojis or spcial characters. Conceptually the content should describe the difference of state to the previous commit. It's unnecessary to include details about fixes to issues that were introduced in the same diff we're committing, that just confuses the reader because to them those issues never happened when they look at the finalized diff that was committed.
